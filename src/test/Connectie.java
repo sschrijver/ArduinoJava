@@ -23,8 +23,6 @@ public class Connectie implements SerialPortEventListener
     private BufferedReader input;
     private OutputStream output;
 
-    private boolean klaar;
-
     public Connectie()
     {
         appName = getClass().getName();
