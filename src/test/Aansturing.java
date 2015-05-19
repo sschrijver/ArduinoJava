@@ -1,32 +1,23 @@
 package test;
 
-public class Aansturing {
+public class Aansturing
+{
     private Connectie c;
-    
+
     public Aansturing(Connectie c)
     {
         this.c = c;
-    } 
-           
-    
-    public void naarLinks()
-    {
-        c.sendData("naarLinks");
-        try
-        {
-            Thread.sleep(2000);
-        }
-        catch (InterruptedException ie)
-        {
-        }
     }
-    
-    public void naarRechts()
+
+    public void stuur(String s)
     {
-        c.sendData("naarRechts");
+        c.sendData(s);
         try
         {
-            Thread.sleep(2000);
+            while(!c.isOntvangen())
+            {
+                Thread.sleep(1);
+            }
         }
         catch (InterruptedException ie)
         {

@@ -8,19 +8,12 @@ public class main
         Aansturing aansturing = new Aansturing(connectie);
         if (connectie.initialize())
         {
-            aansturing.naarLinks();
-            aansturing.naarRechts();
+            aansturing.stuur("-1,-5");
+            aansturing.stuur("2,3");
+            aansturing.stuur("-1,0");
             connectie.close();
         }
 
-        // Wait 5 seconds then shutdown
-        try
-        {
-            Thread.sleep(2000);
-        }
-        catch (InterruptedException ie)
-        {
-        }
     }
 
 }

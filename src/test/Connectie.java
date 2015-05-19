@@ -22,6 +22,7 @@ public class Connectie implements SerialPortEventListener
     private String appName;
     private BufferedReader input;
     private OutputStream output;
+    private boolean ontvangen = false;
 
     public Connectie()
     {
@@ -93,6 +94,7 @@ public class Connectie implements SerialPortEventListener
 
             output = serialPort.getOutputStream();
             output.write(data.getBytes());
+            ontvangen = false;
         }
         catch (Exception e)
         {
@@ -112,7 +114,7 @@ public class Connectie implements SerialPortEventListener
 
     public synchronized void serialEvent(SerialPortEvent oEvent)
     {
-        System.out.println("Event ontvangen: " + oEvent.toString());
+//        System.out.println("Event ontvangen: " + oEvent.toString());
         try
         {
             switch (oEvent.getEventType())
@@ -124,24 +126,23 @@ public class Connectie implements SerialPortEventListener
                     }
                     String inputLine = input.readLine();
 
-//                    if (inputLine == "false")
-//                    {
-//                        System.out.println("klaar!");
-//                        klaar = true;
-//                    }
                     System.out.println(inputLine);
-
+                    ontvangen = true;
                     break;
 
                 default:
                     break;
             }
         }
-
-        catch (Exception e)
+        catch(IOException ioe)
         {
-            System.err.println(e.toString());
+            // catch
         }
+
+    }
+    public boolean isOntvangen()
+    {
+        return ontvangen;
     }
 
     
