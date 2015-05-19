@@ -24,7 +24,7 @@ int lijnTeller()
   while (lijnSensorWaarde >= lijnSensorDetectie)
   {
     lijnenGeteld++;
-    Serial.println("plus een
+    Serial.println("plus een");
     Serial.println(lijnSensorWaarde);
     delay(1000);
   }
