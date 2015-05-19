@@ -14,17 +14,17 @@ void setup()
 
 }
 
-int lijnTeller()
+int lijnTeller(int i)
 {
   lijnSensorWaarde = analogRead(0);
-  
-  Serial.println(lijnSensorWaarde);
-  
 
-  while (lijnSensorWaarde >= lijnSensorDetectie)
+  Serial.println(lijnSensorWaarde);
+
+  while (lijnSensorWaarde >= lijnSensorDetectie && lijnenGeteld <= i)
   {
     lijnenGeteld++;
     Serial.println("plus een");
+    Serial.println(lijnenGeteld);
     Serial.println(lijnSensorWaarde);
     delay(1000);
   }
@@ -42,9 +42,7 @@ void bovenOnder(int i)
 
     while (lijnenGeteld < abs(i))
     {
-    lijnTeller(); 
-    
-      // do nothing
+      lijnTeller(abs(i));
     }
     analogWrite(updownSnelheid, 0);
     y = y - abs(i);
@@ -103,10 +101,11 @@ void loop()
     yActie = tweedeWaarde.toInt();
 
     linksRechts(xActie);
-    
+
     bovenOnder(yActie);
 
     Serial.println("Gepakt!");
   }
   bovenOnder(-3);
+  delay(100000);
 }
