@@ -1,5 +1,6 @@
 int xActie, yActie, updownSnelheid, updown, leftrightSnelheid, leftright, lijnSensorWaarde, lijnenGeteld;
 int lijnSensorDetectie = 700;
+int lijnSensorDefault = 100;
 int x = 0;
 int y = 4;
 
@@ -16,18 +17,26 @@ void setup()
 
 int lijnTeller(int i)
 {
-  lijnSensorWaarde = analogRead(0);
+  Serial.println(analogRead(0));
 
-  Serial.println(lijnSensorWaarde);
-
-  while (lijnSensorWaarde >= lijnSensorDetectie && lijnenGeteld <= i)
+  while (analogRead(0) >= lijnSensorDetectie && analogRead(0) != 1023 && lijnenGeteld < i)
   {
+    Serial.println(analogRead(0));
     lijnenGeteld++;
     Serial.println("plus een");
     Serial.println(lijnenGeteld);
-    Serial.println(lijnSensorWaarde);
-    delay(1000);
+    Serial.println(analogRead(0));
+
+    if (lijnenGeteld < i)
+    {
+      while (analogRead(0) >= lijnSensorDefault)
+      {
+        // do nothing
+      }
+    }
+
   }
+
   return lijnenGeteld;
 }
 
@@ -37,7 +46,7 @@ void bovenOnder(int i)
   {
     // Motor omhoog
     digitalWrite (updown, HIGH);
-    analogWrite(updownSnelheid, 150);
+    analogWrite(updownSnelheid, 255);
     lijnenGeteld = 0;
 
     while (lijnenGeteld < abs(i))
@@ -51,13 +60,20 @@ void bovenOnder(int i)
   {
     // Motor omlaag
     digitalWrite (updown, LOW);
-    analogWrite(updownSnelheid, 150);
+    analogWrite(updownSnelheid, 255);
+
+    lijnenGeteld = 0;
+    while (lijnenGeteld < i)
+    {
+      lijnTeller(i);
+    }
+    analogWrite(updownSnelheid, 0);
     y = y + i;
   }
   else
   {
     // Motor omhoog omlaag uit!
-    analogWrite(updownSnelheid, 150);
+    analogWrite(updownSnelheid, 0);
   }
 }
 
@@ -66,22 +82,38 @@ void linksRechts(int i)
   if (i < 0)
   {
     // Motor naar links
+    digitalWrite (leftright, LOW);
+    analogWrite(leftrightSnelheid, 255);
+
+    lijnenGeteld = 0;
+    while (lijnenGeteld < abs(i))
+    {
+      lijnTeller(abs(i));
+    }
     digitalWrite (leftright, HIGH);
-    analogWrite(leftrightSnelheid, 150);
+    analogWrite(leftrightSnelheid, 0);
     x = x - abs(i);
   }
   else if (i > 0)
   {
 
     // Motor naar rechts
-    digitalWrite (leftright, LOW);
-    analogWrite(leftrightSnelheid, 150);
+    digitalWrite (leftright, HIGH);
+    analogWrite(leftrightSnelheid, 255);
+
+    lijnenGeteld = 0;
+    while (lijnenGeteld < i)
+    {
+      lijnTeller(i);
+    }
+    digitalWrite (leftright, HIGH);
+    analogWrite(leftrightSnelheid, 0);
     x = x + i;
   }
   else
   {
     // Motor links rechts uit!
-    analogWrite(updownSnelheid, 150);
+    analogWrite(updownSnelheid, 0);
   }
 }
 
@@ -106,6 +138,8 @@ void loop()
 
     Serial.println("Gepakt!");
   }
-  bovenOnder(-3);
+
+  bovenOnder(-4);
+  linksRechts(-3);
   delay(100000);
 }
