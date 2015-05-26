@@ -23,7 +23,6 @@ int lijnTellerLinksRechts(int i)
   {
     lijnenGeteld++;
     int tachtig = 80;
-    Serial.println("lijn gelezen");
 
     if (lijnenGeteld < i)
     {
@@ -195,7 +194,7 @@ void loop()
 
     bovenOnder(yActie);
 
-    Serial.println("Gepakt!");
+    Serial.println("done");
   }
 
 }
