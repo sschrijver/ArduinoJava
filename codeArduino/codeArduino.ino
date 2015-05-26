@@ -1,3 +1,5 @@
+#include <Servo.h> // Servo include
+
 int xActie, yActie, updownSnelheid, updown, leftrightSnelheid, leftright, lijnSensorWaarde, lijnenGeteld;
 int lijnSensorDetectie = 500;
 int lijnSensor2Detectie = 400;
@@ -5,6 +7,10 @@ int motorSnelheid1 = 150;
 int motorSnelheid2 = 150;
 int x = 0;
 int y = 4;
+int grijpDelay = 800;
+
+Servo myservo;  // variabele voor servo
+int pos = 0;   // default servo positie
 
 void setup()
 {
@@ -13,6 +19,10 @@ void setup()
   updown = 4; // omhoog / omlaag : motorrichting
   leftrightSnelheid = 6; // links / rechts : motorsnelheid
   leftright = 7; // links / rechts: motorrichting
+
+  myservo.attach(13); // Servo op pin 9
+
+  pinMode(12, OUTPUT);
 
 
 }
@@ -67,7 +77,7 @@ void bovenOnder(int i)
     digitalWrite (updown, LOW);
     analogWrite(updownSnelheid, motorSnelheid2);
     lijnenGeteld = 0;
-    
+
     if (analogRead(1) > honderd)
     {
       while (analogRead(1) > honderd)
@@ -124,7 +134,7 @@ void linksRechts(int i)
     analogWrite(leftrightSnelheid, motorSnelheid1);
 
     lijnenGeteld = 0;
-    
+
 
     if (analogRead(0) > tachtig)
     {
@@ -150,7 +160,7 @@ void linksRechts(int i)
     analogWrite(leftrightSnelheid, motorSnelheid1);
 
     lijnenGeteld = 0;
- 
+
 
     if (analogRead(0) > tachtig)
     {
@@ -174,13 +184,26 @@ void linksRechts(int i)
     analogWrite(updownSnelheid, 0);
   }
 }
+void pak()
+{
+  myservo.write(0);
+  delay(600);
+  myservo.write(100);
+}
+void terug()
+{
+  myservo.write(180);
+  delay(600);
+  myservo.write(100);
+}
 
 void loop()
 {
-
+  myservo.write(100);
   if (Serial.available() > 0)
   {
     String recv = Serial.readStringUntil('\n');
+
     int commaIndex = recv.lastIndexOf(',');
     int tweedeCommaIndex = recv.lastIndexOf(',', commaIndex + 1);
 
@@ -193,6 +216,24 @@ void loop()
     linksRechts(xActie);
 
     bovenOnder(yActie);
+
+    pak();
+
+    // Motor omhoog
+    digitalWrite (updown, LOW);
+    analogWrite(updownSnelheid, motorSnelheid2);
+    delay(1500);
+    analogWrite(updownSnelheid, 0);
+
+    terug();
+
+    bovenOnder(1);
+    y++;
+    
+    Serial.print("X:");
+    Serial.print(x);
+    Serial.print("Y:");
+    Serial.println(y);
 
     Serial.println("done");
   }
