@@ -32,7 +32,7 @@ void leftOrRight()
     digitalWrite(updown, HIGH);
     analogWrite(updownSnelheid, 255);
   }
-  else if(currentTask == "left"){
+  else if(currentTask == "right"){
     digitalWrite(updown, LOW);
     analogWrite(updownSnelheid, 255);
   }
