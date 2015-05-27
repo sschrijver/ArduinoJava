@@ -21,6 +21,7 @@ void vanBandEenAf()
       delay(1000);//genoeg delay zodat het artikel tijd heeft om van de band af te vallen
       digitalWrite(leftright, HIGH);
       analogWrite(leftrightSnelheid, 0);
+      Serial.println("Lijn gezien");
       leftOrRight();
       }
       
@@ -49,9 +50,12 @@ void leftOrRight()
 
 void loop()
 {
+  if(Serial.available()>0){
+    currentTask =Serial.readStringUntil('\n');
+  }
     vanBandEenAf();
     
-    Serial.println(analogRead(0));
-    Serial.println(currentTask);
+//    Serial.println(analogRead(0));
+//    Serial.println(currentTask);
   
 }
