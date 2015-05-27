@@ -8,9 +8,16 @@ public class main
         Aansturing aansturing = new Aansturing(connectie);
         if (connectie.initialize())
         {
-            aansturing.stuur("-1,-5");
-            aansturing.stuur("2,3");
-            aansturing.stuur("-1,0");
+            aansturing.stuur("1,0");
+            
+            aansturing.stuur("3,-3");
+            aansturing.stuur("1,-1");
+            aansturing.stuur("0,4");
+            
+            
+            aansturing.stuur("-4,0");
+            
+            aansturing.stuur("drop");
             connectie.close();
         }
 

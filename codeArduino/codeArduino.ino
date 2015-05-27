@@ -5,8 +5,6 @@ int lijnSensorDetectie = 500;
 int lijnSensor2Detectie = 400;
 int motorSnelheid1 = 150;
 int motorSnelheid2 = 150;
-int x = 0;
-int y = 4;
 int grijpDelay = 800;
 
 Servo myservo;  // variabele voor servo
@@ -91,7 +89,6 @@ void bovenOnder(int i)
       lijnTellerOmhoogOmlaag(abs(i));
     }
     analogWrite(updownSnelheid, 0);
-    y = y - abs(i);
   }
   else if (i > 0)
   {
@@ -115,7 +112,6 @@ void bovenOnder(int i)
       lijnTellerOmhoogOmlaag(i);
     }
     analogWrite(updownSnelheid, 0);
-    y = y + i;
   }
   else
   {
@@ -150,7 +146,6 @@ void linksRechts(int i)
     }
     digitalWrite (leftright, HIGH);
     analogWrite(leftrightSnelheid, 0);
-    x = x - abs(i);
   }
   else if (i > 0)
   {
@@ -176,7 +171,6 @@ void linksRechts(int i)
     }
     digitalWrite (leftright, HIGH);
     analogWrite(leftrightSnelheid, 0);
-    x = x + i;
   }
   else
   {
@@ -203,38 +197,75 @@ void loop()
   if (Serial.available() > 0)
   {
     String recv = Serial.readStringUntil('\n');
-
-    int commaIndex = recv.lastIndexOf(',');
-    int tweedeCommaIndex = recv.lastIndexOf(',', commaIndex + 1);
-
-    String eersteWaarde = recv.substring(0, commaIndex);
-    String tweedeWaarde = recv.substring(commaIndex + 1  );
-
-    xActie = eersteWaarde.toInt();
-    yActie = tweedeWaarde.toInt();
-
-    linksRechts(xActie);
-
-    bovenOnder(yActie);
-
-    pak();
-
-    // Motor omhoog
-    digitalWrite (updown, LOW);
-    analogWrite(updownSnelheid, motorSnelheid2);
-    delay(1500);
-    analogWrite(updownSnelheid, 0);
-
-    terug();
-
-    bovenOnder(1);
-    y++;
+    if (recv == "drop")
+    {
+      linksRechts(-1);
+      
+      // Motor omhoog
+      digitalWrite (updown, LOW);
+      analogWrite(updownSnelheid, motorSnelheid2);
+      delay(1300);
+      analogWrite(updownSnelheid, 0);
+      
+      pak();
+      pak();
+      
+      bovenOnder(1);
+      
+      terug();
+      terug();
+      
+      linksRechts(1);
+    }
     
-    Serial.print("X:");
-    Serial.print(x);
-    Serial.print("Y:");
-    Serial.println(y);
+    else if(recv == "startpositie")
+    {
+      while(Serial.available() == 0)
+      {
+        // do nothing
+      }
+      recv = Serial.readStringUntil('\n');
+      int commaIndex = recv.lastIndexOf(',');
+      int tweedeCommaIndex = recv.lastIndexOf(',', commaIndex + 1);
 
+      String eersteWaarde = recv.substring(0, commaIndex);
+      String tweedeWaarde = recv.substring(commaIndex + 1  );
+
+      xActie = eersteWaarde.toInt();
+      yActie = tweedeWaarde.toInt();
+
+      linksRechts(xActie);
+
+      bovenOnder(yActie);
+    }
+    
+    else
+    {
+      int commaIndex = recv.lastIndexOf(',');
+      int tweedeCommaIndex = recv.lastIndexOf(',', commaIndex + 1);
+
+      String eersteWaarde = recv.substring(0, commaIndex);
+      String tweedeWaarde = recv.substring(commaIndex + 1  );
+
+      xActie = eersteWaarde.toInt();
+      yActie = tweedeWaarde.toInt();
+
+      linksRechts(xActie);
+
+      bovenOnder(yActie);
+
+      pak();
+
+      // Motor omhoog
+      digitalWrite (updown, LOW);
+      analogWrite(updownSnelheid, motorSnelheid2);
+      delay(1350);
+      analogWrite(updownSnelheid, 0);
+
+      terug();
+
+      bovenOnder(1);
+    }
     Serial.println("done");
   }
 
