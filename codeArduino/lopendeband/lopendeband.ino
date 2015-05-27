@@ -44,10 +44,11 @@ void leftOrRight()
 
 void loop()
 {
+  
   digitalWrite(leftright, HIGH);
   analogWrite(leftrightSnelheid, 255);
   
-  while (analogRead(0) < lijnSensorDetectie)
+  while (analogRead(0) > lijnSensorDetectie)
   {
     // do nothing
   }
