@@ -6,6 +6,7 @@ int lijnSensor2Detectie = 400;
 int motorSnelheid1 = 150;
 int motorSnelheid2 = 150;
 int grijpDelay = 800;
+String recv;
 
 Servo myservo;  // variabele voor servo
 int pos = 0;   // default servo positie
@@ -191,36 +192,48 @@ void terug()
   myservo.write(100);
 }
 
+void dropOpBand()
+{
+  myservo.write(0);
+  delay(1000);
+  myservo.write(100);
+}
+void terugVanBand()
+{
+  myservo.write(180);
+  delay(1300);
+  myservo.write(100);
+}
+
 void loop()
 {
   myservo.write(100);
   if (Serial.available() > 0)
   {
-    String recv = Serial.readStringUntil('\n');
+    recv = Serial.readStringUntil('\n');
     if (recv == "drop")
     {
       linksRechts(-1);
-      
+
       // Motor omhoog
       digitalWrite (updown, LOW);
       analogWrite(updownSnelheid, motorSnelheid2);
       delay(1300);
       analogWrite(updownSnelheid, 0);
-      
-      pak();
-      pak();
-      
+
+      dropOpBand();
+
       bovenOnder(1);
-      
-      terug();
-      terug();
-      
+
+      terugVanBand();
+
       linksRechts(1);
     }
-    
-    else if(recv == "startpositie")
+
+    else if (recv == "startpositie")
     {
-      while(Serial.available() == 0)
+      Serial.println("done");
+      while (Serial.available() == 0)
       {
         // do nothing
       }
@@ -238,7 +251,7 @@ void loop()
 
       bovenOnder(yActie);
     }
-    
+
     else
     {
       int commaIndex = recv.lastIndexOf(',');
